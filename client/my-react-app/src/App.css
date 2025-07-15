@@ -1,0 +1,172 @@
+/* Main app container */
+.App {
+  width: 100vw;
+  height: auto;
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  flex-direction: column;
+}
+
+/* Reset body margin/padding */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Post styling */
+.post {
+  width: 400px;
+  height: 300px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  border: 1px solid lightgray;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+}
+
+/* Hover effect */
+.post:hover {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  cursor: pointer;
+}
+
+/* Title with soft pink background */
+.post .title {
+  flex: 20%;
+  border-bottom: 1px solid lightgray;
+  background-color: #ffb2e4; /* soft pink */
+  display: grid;
+  place-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+/* Body with slightly faded white background */
+.post .body {
+  flex: 60%;
+  display: grid;
+  place-content: center;
+  background-color: rgba(255, 255, 255, 0.4); /* faded white */
+  color: #a74574;
+}
+
+/* Footer with soft pink background */
+.post .footer {
+  flex: 20%;
+  border-top: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  background-color: #ffb2e4; /* soft pink */
+  color: white;
+  font-weight: bold;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* Fun cursor */
+body, a, a:hover {
+  cursor: url('https://66.media.tumblr.com/7659e714cab33f9d59124f924405e793/tumblr_inline_p7g82dZq1h1r466gz_75sq.png'), auto;
+}
+
+/* Background image */
+body {
+  background-image: url('https://images8.alphacoders.com/105/1055726.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/* Falling petals gif (overlay) */
+.falling-petals {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* changed from -1 to 0 */
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Sidebar styles */
+.sidebar {
+  height: 100%;
+  width: 200px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  overflow-x: hidden;
+  padding-top: 16px;
+  display: block;
+}
+
+.sidebar a {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  padding: 5px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  display: block;
+}
+
+.sidebar a:hover {
+  color: pink;
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar { padding-top: 15px; }
+  .sidebar a { font-size: 18px; }
+}
+
+/* Timer and Button styling */
+.time {
+  top: 30px;
+  display: block;
+  position: absolute;
+  right: 0;
+  color: white;
+}
+
+.button {
+  background-color: pink;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+/* Centered container */
+.container {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  width: 600px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  top: 200px;
+  left: 480px;
+}
+
+/* Minesweeper grid layout */
+.game {
+  position: absolute;
+  top: 460px;
+  right: 600px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 300px;
+}
