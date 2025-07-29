@@ -1,32 +1,31 @@
 import './App.css';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/Home';
+import CreatePost from './pages/CreatePost';
+import Post from './pages/Post';
 import petalsGif from './gif.gif';
 
 function App() {
-  const [listOfPosts, setListOfPosts] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://88.200.63.148:2222/posts").then((response) => {
-      setListOfPosts(response.data);
-    });
-  }, []);
-
   return (
     <div>
       {/* Background falling petals GIF */}
-       <img className="falling-petals" src={petalsGif} alt="falling petals" />
-
+      <img className="falling-petals" src={petalsGif} alt="falling petals" />
 
       {/* Main app container */}
       <div className="App">
-        {listOfPosts.map((value, key) => (
-          <div className="post" key={key}>
-            <div className="title">{value.title}</div>
-            <div className="body">{value.postText}</div>
-            <div className="footer">{value.username}</div>
+        <Router>
+          {/* Navigation Links */}
+          <div className="navLinks">
+            <Link to="/">Home Page</Link>
+            <Link to="/createpost">Create a Post</Link>
           </div>
-        ))}
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/createpost" element={<CreatePost />} />
+            <Route path="/post/:id" element={<Post />} /> 
+          </Routes>
+        </Router>
       </div>
     </div>
   );
