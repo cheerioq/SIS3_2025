@@ -3,13 +3,13 @@ const router = express.Router();
 const { Comments } = require('../models'); 
 const {validateToken} = require('../middlewares/AuthMiddleware'); 
 
-// routes/Comments.js
+
 router.get('/:postId', async (req, res) => {
   try {
     const postId = req.params.postId;
 
     const comments = await Comments.findAll({
-      where: { PostId: postId },  // Capital "P"!
+      where: { PostId: postId },  // Capital P
       attributes: ['id', 'commentBody', 'PostId','username', 'createdAt', 'updatedAt']
     });
 
@@ -23,9 +23,9 @@ router.get('/:postId', async (req, res) => {
 
 router.post("/", validateToken, async (req, res) => {
   const comment = req.body;
-  comment.username = req.user.username; // set username from token
+  comment.username = req.user.username; 
   const createdComment = await Comments.create(comment);
-  res.json(createdComment); // now you get id, username, etc.
+  res.json(createdComment); 
 });
 
 

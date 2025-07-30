@@ -25,7 +25,7 @@ const [newComment, setNewComment] = useState("");
     postId: id
   }, {
     headers: {
-      accessToken: sessionStorage.getItem("accessToken")
+      accessToken: localStorage.getItem("accessToken")
     },
   }
 ).then((response) => {

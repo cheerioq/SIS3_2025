@@ -1,9 +1,9 @@
 
 const express = require('express');
 const router = express.Router();
-const { Users } = require('../models'); // Adjust the path as necessary
+const { Users } = require('../models'); 
 const bcrypt = require('bcrypt');
-
+const {validateToken} = require('../middlewares/AuthMiddleware'); 
 const {sign} = require('jsonwebtoken');
 
 router.post("/", async (req, res) => {
@@ -31,6 +31,12 @@ router.post('/login', async (req, res) => {
 
       });
     });
+
+    router.get('/auth', validateToken, (req, res) => {
+        res.json(req.user);
+
+    })
+
 
 
 module.exports = router;
