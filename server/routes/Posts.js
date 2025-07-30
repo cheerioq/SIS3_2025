@@ -21,11 +21,15 @@ router.get('/byId/:id', async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    console.log("Received comment:", req.body);
+  try {
+    console.log("Received post:", req.body);
     const post = req.body;
-    await Posts.create(post);
-    res.json(post);
+    const createdPost = await Posts.create(post);
+    res.json(createdPost);
+  } catch (err) {
+    console.error("Error creating post:", err);
+    res.status(500).json({ error: "Failed to create post", details: err.message });
+  }
 });
-
 
 module.exports = router;

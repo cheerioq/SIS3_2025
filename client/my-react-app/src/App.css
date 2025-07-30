@@ -22,11 +22,13 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 50px;
-  border: 1px solid lightgray;
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* fade */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   overflow: hidden;
-  backdrop-filter: blur(5px);
+  border: none; /* removed border */
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Hover effect */
@@ -38,7 +40,6 @@ body {
 /* Title with soft pink background */
 .post .title {
   flex: 20%;
-  border-bottom: 1px solid lightgray;
   background-color: #ffb2e4; /* soft pink */
   display: grid;
   place-content: center;
@@ -46,19 +47,17 @@ body {
   font-weight: bold;
 }
 
-/* Body with slightly faded white background */
+/* Body with transparent background removed since post has fade */
 .post .body {
   flex: 60%;
   display: grid;
   place-content: center;
-  background-color: rgba(255, 255, 255, 0.4); /* faded white */
   color: #a74574;
 }
 
 /* Footer with soft pink background */
 .post .footer {
   flex: 20%;
-  border-top: 1px solid lightgray;
   display: flex;
   align-items: center;
   padding-left: 15px;
@@ -136,17 +135,21 @@ body {
   color: white;
 }
 
-.button {
-  background-color: pink;
+/* Unified button styles */
+button, .button, .addCommentContainer button, .formContainer button {
+  background-color: #ff94d3; /* base pink */
   border: none;
+  border-radius: 8px;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button:hover, .button:hover, .addCommentContainer button:hover, .formContainer button:hover {
+  background-color: #ff4da6; /* darker pink on hover */
 }
 
 /* Centered container */
@@ -172,7 +175,6 @@ body {
 }
 
 /* CREATE POST PAGE CSS */
-
 .createPostPage {
   font-family: Arial, Helvetica, sans-serif;
   width: 100vw;
@@ -180,6 +182,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: url('your-background.jpg') center/cover no-repeat; /* optional if using background */
 }
 
 .formContainer {
@@ -187,11 +190,16 @@ body {
   flex-direction: column;
   justify-content: center;
   width: 500px;
-  height: auto;
   padding: 20px;
-  border: 5px solid rgb(255, 255, 255);
-  border-radius: 5px;
-  gap: 15px; /* space between elements */
+  gap: 15px;
+
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* white top to pink bottom */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: none; /* no border */
+  border-radius: 8px; /* keep curved edges */
+
   color: #a74574;
 }
 
@@ -205,24 +213,25 @@ body {
 
 .formContainer .inputCreatePost {
   height: 40px;
-  border: 2px solid grey;
-  border-radius: 5px;
+  border: 2px solid #ff94d3;
+  border-radius: 8px;
   padding-left: 10px;
   font-size: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #a74574;
 }
 
 .formContainer button {
   margin-top: 15px;
   height: 40px;
-  border: none;
-  background-color: rgb(254, 154, 219);
-  border-radius: 5px;
-  color: white;
 }
 
 .formContainer button:hover {
   cursor: pointer;
-  background-color: rgb(254, 102, 224);
+}
+
+.formContainer .inputCreatePost::placeholder {
+  color: #c2789e;
 }
 
 span {
@@ -253,7 +262,6 @@ span {
   background-color: rgba(254, 102, 224, 0.9);
   color: white;
 }
-
 
 /* Post Page styling */
 .postPage {
@@ -300,7 +308,9 @@ span {
 /* Right side placeholder (e.g., for comments) */
 .postPage .rightSide {
   width: 300px;
-  background: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* faded like posts */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -318,10 +328,9 @@ span {
 
 .addCommentContainer input {
   padding: 10px;
-  border: 2px solid #a74574;
+  border: 2px solid #ff94d3;
   border-radius: 8px;
   font-size: 16px;
-  margin-bottom: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   color: #a74574;
 }
@@ -331,12 +340,14 @@ span {
 }
 
 .addCommentContainer button {
-  padding: 10px;
-  border: none;
+  margin-top: 10px;
   background-color: #ff94d3;
-  color: white;
+  border: none;
   border-radius: 8px;
+  color: white;
   cursor: pointer;
+  padding: 10px;
+  font-size: 16px;
   transition: background-color 0.3s ease;
 }
 
@@ -344,18 +355,56 @@ span {
   background-color: #ff4da6;
 }
 
-/* List of comments */
-.listOfComments {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
+/* Comments styling */
 .comment {
-  padding: 10px 15px;
-  background-color: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* fade */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 10px;
-  border: 1px solid #f0c4dd;
   font-size: 16px;
   color: #a74574;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Comment username */
+.comment .username {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ff4da6;
+}
+
+.formImageTitle {
+  width: 300px; /* Adjust as needed */
+  margin: 0 auto 0px auto;
+  display: block;
+}
+
+.formImageTitler {
+  width: 100%;           /* Use % to make it responsive */
+  max-width: 400px;      /* Limit max size */
+  margin: 0 auto 0px auto;
+  display: block;
+}
+
+.formImageTitlep {
+  width: 100%;           /* Use % to make it responsive */
+  max-width: 500px;      /* Limit max size */
+  margin: 0 auto 0px auto;
+  display: block;
+}
+
+.posts-container {
+  display: flex;          /* layout children side by side */
+  flex-wrap: nowrap;      /* no wrapping, posts stay in one line */
+  gap: 30px;              /* space between posts */
+  padding: 20px;
+  overflow-x: auto;       /* horizontal scrollbar if overflow */
+  justify-content: flex-start;  /* align posts from left */
+}
+
+
+
+

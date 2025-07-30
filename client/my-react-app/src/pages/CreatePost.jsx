@@ -3,6 +3,7 @@ import "../App.css";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import postImage from '../post.png';
 
 function CreatePost() { 
   const initialValues = {
@@ -27,6 +28,7 @@ function CreatePost() {
   return (
     <div className='createPostPage'>
       <div className="formContainer">
+        <img src={postImage} alt="Post" className="formImageTitlep" />
         <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
           {() => (
             <Form>

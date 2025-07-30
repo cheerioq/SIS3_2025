@@ -12,23 +12,22 @@ function Home() {
     });
   }, []);
 
-  return (
-    <div>
-      {listOfPosts.map((value, key) => (
-        <div
-          className="post"
-          onClick={() => {
-            navigate(`/post/${value.id}`); 
-          }}
-          key={key}
-        >
-          <div className="title">{value.title}</div>
-          <div className="body">{value.postText}</div>
-          <div className="footer">{value.username}</div>
-        </div>
-      ))}
-    </div>
-  );
+ return (
+  <div className="posts-container">
+    {listOfPosts.map((value, key) => (
+      <div
+        className="post"
+        onClick={() => navigate(`/post/${value.id}`)}
+        key={key}
+      >
+        <div className="title">{value.title}</div>
+        <div className="body">{value.postText}</div>
+        <div className="footer">{value.username}</div>
+      </div>
+    ))}
+  </div>
+);
+
 }
 
 export default Home;

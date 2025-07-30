@@ -23,14 +23,23 @@ const [newComment, setNewComment] = useState("");
   axios.post('http://88.200.63.148:2222/comments', {
     commentBody: newComment,
     postId: id
-  }).then((response) => {
-    const commentToAdd = {
-      commentBody: newComment,
-    };
-    setComments([...comments, commentToAdd]);
-    setNewComment("");
+  }, {
+    headers: {
+      accessToken: sessionStorage.getItem("accessToken")
+    },
+  }
+).then((response) => {
+    if (response.data.error) {
+      console.log(response.data.error);
+    } else {
+      const commentToAdd = response.data; // includes commentBody and username
+      setComments([...comments, commentToAdd]);
+      setNewComment("");
+    }
   });
-}
+};
+
+
 
 
     return (
@@ -41,16 +50,27 @@ const [newComment, setNewComment] = useState("");
       <div className="footer"> {postObject.username} </div>
       </div>
       <div className="rightSide"> 
-        <div className="addCommentContainer" >
-          <input type="text" placeholder="Comment..." autoComplete="off" value={newComment} onChange={(event) => {setNewComment(event.target.value)}}/> 
-          <button onClick={addComment}>Send</button>
-          </div>
-        <div className="listOfComments" >
-          {comments.map((comment, key) => {
-            return <div key={key} className="comment"> {comment.commentBody} </div>
-          })}
+  <div className="addCommentContainer">
+    <input 
+      type="text" 
+      placeholder="Comment..." 
+      autoComplete="off" 
+      value={newComment} 
+      onChange={(event) => setNewComment(event.target.value)} 
+    /> 
+    <button onClick={addComment}>Send</button>
+  </div>
+
+  <div className="listOfComments">
+    {comments.map((comment, key) => {
+      return (
+        <div key={key} className="comment">
+          <strong>{comment.username}</strong>: {comment.commentBody}
         </div>
-        </div>
+      );
+    })}
+  </div>
+</div>
       </div>
     );
 }
