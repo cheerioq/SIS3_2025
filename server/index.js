@@ -4,7 +4,7 @@ const cors = require("cors");          // standard to start api
 
 app.use(express.json());  // middleware to parse JSON bodies
 app.use(cors({
-  origin: 'http://88.200.63.148:1212'
+  origin: 'http://localhost:5173'
 }));
 
 const db = require("./models")   // standard to start api
@@ -27,6 +27,8 @@ const commentsRouter = require("./routes/Comments");
 app.use("/comments", commentsRouter); 
 const usersRouter = require("./routes/Users");  
 app.use("/auth", usersRouter); 
+const likesRouter = require("./routes/Likes");
+app.use("/likes", likesRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(2222, () => {

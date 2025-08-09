@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {} from 'react';
 import "../App.css";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import postImage from '../post.png';
+import { useNavigate } from 'react-router-dom';
 
 function CreatePost() { 
+  const navigate = useNavigate();
   const initialValues = {
     title: '',
     postText: '',
@@ -19,9 +21,8 @@ function CreatePost() {
   });
 
   const onSubmit = (data) => {
-    axios.post('http://88.200.63.148:2222/posts', data).then((response) => {
-      setListOfPosts(response.data);
-      console.log('IT WORKED');
+    axios.post('http://localhost:2222/posts', data).then(() => {
+      navigate('/');
     });
   };
 

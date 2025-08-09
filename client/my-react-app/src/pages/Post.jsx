@@ -1,26 +1,28 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../helpers/AuthContext';
 
 function Post() {
     let {id} = useParams();
 const [postObject, setPostObject] = useState({});
 const [comments, setComments] = useState([]);
 const [newComment, setNewComment] = useState("");
+const { authState } = useContext(AuthContext);
 
     useEffect(() => {
-          axios.get(`http://88.200.63.148:2222/posts/byId/${id}`).then((response) => {
+          axios.get(`http://localhost:2222/posts/byId/${id}`).then((response) => {
       setPostObject(response.data);
     });
 
-    axios.get(`http://88.200.63.148:2222/comments/${id}`).then((response) => {
+    axios.get(`http://localhost:2222/comments/${id}`).then((response) => {
       setComments(response.data);
     });
 
   }, []);
   
  const addComment = () => {
-  axios.post('http://88.200.63.148:2222/comments', {
+  axios.post('http://localhost:2222/comments', {
     commentBody: newComment,
     postId: id
   }, {
@@ -39,7 +41,17 @@ const [newComment, setNewComment] = useState("");
   });
 };
 
-
+ const deleteComment = (id) => {
+  axios.delete(`http://localhost:2222/comments/${id}`, {
+    headers: { accessToken: localStorage.getItem("accessToken") },
+  })
+  .then(() => {
+    setComments(prevComments => prevComments.filter(val => val.id !== id));
+  })
+  .catch(err => {
+    console.error(err);
+  });
+};
 
 
     return (
@@ -66,6 +78,8 @@ const [newComment, setNewComment] = useState("");
       return (
         <div key={key} className="comment">
           <strong>{comment.username}</strong>: {comment.commentBody}
+          {authState.username == comment.username && 
+          <button onClick={() => deleteComment(comment.id)}>X</button> }
         </div>
       );
     })}

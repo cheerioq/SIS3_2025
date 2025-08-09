@@ -7,26 +7,29 @@ import Login from './pages/Login';
 import Registration from './pages/Registration';
 import petalsGif from './gif.gif';
 import {AuthContext} from './helpers/AuthContext';
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 
 
 function App() {
-  const [authState, setAuthState] = useState(false);
+  const [authState, setAuthState] = useState({username: "", id: 0, status: false});
 
   useEffect(() => {
-    axios.get("http://88.200.63.148:2222/auth/auth", {headers: {
+    axios.get("http://localhost:2222/auth/auth", {headers: {
       accessToken: localStorage.getItem("accessToken"),
     }}).then((response) => {
       if (response.data.error) {
-        setAuthState(false);
+        setAuthState({...authState, status: false});
       } else {
-        setAuthState(true);
+        setAuthState({username: response.data.username, id: response.data.id, status: true});
       }
     });
   }, []);
  
-
+const logout = () => {
+  localStorage.removeItem("accessToken");
+   setAuthState({username: "", id: 0, status: false});
+};
 
   return (
     <div>
@@ -41,16 +44,26 @@ function App() {
           <div className="navLinks">
             <Link to="/">Home Page</Link>
             <Link to="/createpost">Create a Post</Link>
+           
 
-            {!authState && ( 
+            {!authState.status ? ( 
               <>
 
             <Link to="/login">Log In</Link>
             <Link to="/registration">Resgister</Link>
             </>
+            ) : (
+              <Link to="/" onClick={logout}>Logout</Link>
+
             )}
 
-          </div>
+          </div>\
+
+          {authState.status && (
+  <div className="username-topright">
+    <Link to="/" className="nav-username">{authState.username}</Link>
+  </div>
+)}
 
           <Routes>
             <Route path="/" element={<Home />} />

@@ -4,6 +4,7 @@
     "password": "S039C8R7",
     "database": "SIS3_89191146_2025",
     "host": "127.0.0.1",
+    "port": 3307,
     "dialect": "mysql"
   },
   "test": {
@@ -21,3 +22,4 @@
     "dialect": "mysql"
   }
 }
+

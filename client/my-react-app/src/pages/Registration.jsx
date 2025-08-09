@@ -20,7 +20,7 @@ function Registration() {
 
 const onSubmit = (data) => {
 
-    axios.post("http://88.200.63.148:2222/auth", data).then(() => {
+    axios.post("http://localhost:2222/auth", data).then(() => {
         console.log(data);
     });
 };

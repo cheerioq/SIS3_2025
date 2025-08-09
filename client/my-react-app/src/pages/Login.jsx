@@ -13,7 +13,7 @@ function Login() {
 
   const login = () => {
     const data = { username, password };
-    axios.post("http://88.200.63.148:2222/auth/login", data)
+    axios.post("http://localhost:2222/auth/login", data)
       .then((response) => {
         if (response.data.error)  {
 
@@ -21,8 +21,10 @@ function Login() {
 
         } else {
 
-          localStorage.setItem("accessToken", response.data);
-          setAuthState(true);
+          localStorage.setItem("accessToken", response.data.token);
+          localStorage.setItem("userId", response.data.id);
+
+          setAuthState({username: response.data.username, id: response.data.id, status: true});
           navigate("/");
         }
       })

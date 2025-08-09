@@ -29,5 +29,22 @@ router.post("/", validateToken, async (req, res) => {
 });
 
 
+router.delete("/:commentId", validateToken, async (req, res) => {
+  const commentId = req.params.commentId;
+
+  const deleted = await Comments.destroy({
+    where: {
+      id: commentId,
+      username: req.user.username
+    }
+  });
+
+  if (deleted) {
+    res.json({ message: "Comment deleted" });
+  } else {
+    res.status(404).json({ error: "Comment not found or you are not authorized" });
+  }
+});
+
 
 module.exports = router;

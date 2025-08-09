@@ -3,10 +3,11 @@ console.log("Posts router loaded");
 
 const express = require('express');
 const router = express.Router();
-const { Posts } = require('../models'); // Adjust the path as necessary
+const { Posts, Likes } = require('../models'); // Adjust the path as necessary
 
 router.get("/", async (req, res) => {
-  const listOfPosts = await Posts.findAll();
+  const listOfPosts = await Posts.findAll({include: [{ model: Likes }] });
+  console.log(JSON.stringify(listOfPosts, null, 2));  // Pretty-print the output
   res.json(listOfPosts);
 });
 

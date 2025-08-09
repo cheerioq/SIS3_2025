@@ -397,14 +397,32 @@ span {
 }
 
 .posts-container {
-  display: flex;          /* layout children side by side */
-  flex-wrap: nowrap;      /* no wrapping, posts stay in one line */
-  gap: 30px;              /* space between posts */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 30px;
   padding: 20px;
-  overflow-x: auto;       /* horizontal scrollbar if overflow */
-  justify-content: flex-start;  /* align posts from left */
 }
 
+.username-topright {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+}
 
+.nav-username {
+  background-color: rgba(255, 178, 228, 0.7);
+  border-radius: 8px;
+  color: white;
+  font-size: 18px;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  transition: background-color 0.3s;
+}
 
+.nav-username:hover {
+  background-color: rgba(254, 102, 224, 0.9);
+  color: white;
+}
 
