@@ -9,6 +9,10 @@ import petalsGif from './gif.gif';
 import {AuthContext} from './helpers/AuthContext';
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
+import PageNotFound from './pages/PageNotFound';
+import Profile from './pages/Profile';
+import Report from './pages/Report';
+
 
 
 function App() {
@@ -44,6 +48,8 @@ const logout = () => {
           <div className="navLinks">
             <Link to="/">Home Page</Link>
             <Link to="/createpost">Create a Post</Link>
+            <Link to="/report">Report</Link> 
+
            
 
             {!authState.status ? ( 
@@ -57,12 +63,14 @@ const logout = () => {
 
             )}
 
-          </div>\
+          </div>
 
           {authState.status && (
   <div className="username-topright">
-    <Link to="/" className="nav-username">{authState.username}</Link>
-  </div>
+  <Link to={`/profile/${authState.id}`} className="nav-username">
+    {authState.username}
+  </Link>
+</div>
 )}
 
           <Routes>
@@ -71,6 +79,9 @@ const logout = () => {
             <Route path="/post/:id" element={<Post />} /> 
             <Route path="/registration" element={<Registration />} /> 
             <Route path="/login" element={<Login />} /> 
+            <Route path="/profile/:id" element={<Profile />} /> 
+            <Route path="/report" element={<Report />} /> 
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Router>
         </AuthContext.Provider>

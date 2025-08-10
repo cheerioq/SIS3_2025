@@ -85,18 +85,40 @@ return (
 
     {/* Posts container */}
     <div className="posts-container">
-      {listOfPosts.map((value, key) => {
+      {listOfPosts.slice()
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) 
+  .map((value, key) => {
+
         console.log(`Post ${value.id} Likes:`, value.Likes ? value.Likes.length : 0);
 
         return (
           <div className="post" key={key}>
             <div className="title">{value.title}</div>
+
+
+
+
             <div
               className="body"
               onClick={() => navigate(`/post/${value.id}`)}
             >
               {value.postText}
             </div>
+
+            {value.coinSymbol && (
+  <div
+    style={{
+      color: '#a74174ff',  // pinkish color to match theme
+      fontWeight: '300',  // thin font weight (lighter than normal)
+      fontStyle: 'italic',   // italic style
+      fontSize: '12px',      // smaller font size
+      marginBottom: '6px',
+    }}
+  >
+  {value.coinSymbol}
+  </div>
+)}
+
 
             <div
               className="footer"
@@ -126,7 +148,7 @@ return (
                 </button>
               )}
 
-              <label className="like-count" style={{ color: 'red', fontWeight: 'bold' }}>
+              <label className="like-count" style={{ color: 'white', fontWeight: 'bold' }}>
                 {value.Likes ? value.Likes.length : 0}
               </label>
             </div>

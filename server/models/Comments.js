@@ -8,11 +8,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    postId: { // Explicit foreign key field
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   });
 
   Comments.associate = (models) => {
     Comments.belongsTo(models.Posts, {
-      foreignKey: "PostId",
+      foreignKey: "postId",
       onDelete: "CASCADE",
     });
   };

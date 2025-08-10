@@ -33,4 +33,19 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/byuserId/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const posts = await Posts.findAll({
+      where: { userId: userId },
+      include: [{ model: Likes }]  // if you want to include likes as well
+    });
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch posts for user" });
+  }
+});
+
+
 module.exports = router;

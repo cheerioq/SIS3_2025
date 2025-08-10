@@ -4,7 +4,7 @@
   height: auto;
   display: flex;
   align-items: center;
-  padding-top: 40px;
+  padding-top: 100px;
   flex-direction: column;
 }
 
@@ -79,6 +79,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+  
 }
 
 /* Falling petals gif (overlay) */
@@ -246,6 +247,7 @@ span {
   display: flex;
   gap: 20px;
   font-family: "Comic Sans MS", cursive, sans-serif;
+  
 }
 
 .navLinks a {
@@ -426,3 +428,7 @@ span {
   color: white;
 }
 
+.profile-info p {
+  margin: 10px 0;
+  line-height: 1.4;
+}

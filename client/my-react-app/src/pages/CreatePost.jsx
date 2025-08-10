@@ -11,20 +11,28 @@ function CreatePost() {
   const initialValues = {
     title: '',
     postText: '',
-    username: ''
+    username: '',
+    userId: '',
+    coinSymbol: '',
   };
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     postText: Yup.string().required('Post text is required'),
-    username: Yup.string().min(3).max(15).required('Username is required')
+    username: Yup.string().min(3).max(15).required('Username is required'),
+    coinSymbol: Yup.string().required('Please select a cryptocurrency'),
   });
 
-  const onSubmit = (data) => {
-    axios.post('http://localhost:2222/posts', data).then(() => {
-      navigate('/');
-    });
-  };
+ const onSubmit = (data) => {
+  console.log("Submitting data:", data);
+  const token = localStorage.getItem("accessToken"); // adjust if stored differently
+  axios.post('http://localhost:2222/posts', data, {
+    headers: { accessToken: token }
+  }).then(() => {
+    navigate('/');
+  });
+};
+
 
   return (
     <div className='createPostPage'>
@@ -62,6 +70,24 @@ function CreatePost() {
                 className="inputCreatePost"
               />
               <ErrorMessage name="username" component="span" />
+
+
+              <label htmlFor="coinSymbol">Cryptocurrency:</label>
+<Field as="select" id="coinSymbol" name="coinSymbol" className="inputCreatePost">
+  <option value="">-- Select a Coin --</option>
+  <option value="BINANCE:BTCUSDT">Bitcoin (BTC)</option>
+  <option value="BINANCE:ETHUSDT">Ethereum (ETH)</option>
+  <option value="BINANCE:BNBUSDT">BNB</option>
+  <option value="BINANCE:SOLUSDT">Solana (SOL)</option>
+</Field>
+<ErrorMessage name="coinSymbol" component="span" />
+
+
+              <Field
+  type="hidden"
+  id="userId"
+  name="userId"
+/>
 
               <button type="submit">Create Post</button>
             </Form>
