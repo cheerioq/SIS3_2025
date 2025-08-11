@@ -11,7 +11,7 @@ app.use(
 
 const db = require("./models");
 
-// Seed facts if the CryptoFacts table is empty
+
 async function seedFacts() {
   const count = await db.CryptoFacts.count();
   if (count === 0) {
@@ -71,19 +71,19 @@ async function seedFacts() {
   }
 }
 
-// Test route
+
 app.get("/", (req, res) => {
   res.send("API is running");
 });
 
-// Associate models if they have associations
+
 Object.values(db).forEach((model) => {
   if (model.associate) {
     model.associate(db);
   }
 });
 
-// Routers
+
 const postsRouter = require("./routes/Posts");
 app.use("/posts", postsRouter);
 
@@ -105,7 +105,7 @@ app.use("/facts", cryptoFactsRouter);
 db.sequelize.sync({ alter: true }).then(async () => {
   console.log("DB synced");
 
-  // Run your seedFacts or other startup logic here
+  
   await seedFacts();
 
   app.listen(2222, () => {

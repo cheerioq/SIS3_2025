@@ -60,7 +60,7 @@ function Post() {
   const { authState } = useContext(AuthContext);
   const [showChart, setShowChart] = useState(false);
 
-  // Position state for draggable window, lifted here
+
   const [chartPosition, setChartPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -91,7 +91,7 @@ function Post() {
         if (response.data.error) {
           console.log(response.data.error);
         } else {
-          const commentToAdd = response.data; // includes commentBody, username, userId
+          const commentToAdd = response.data; 
           setComments([...comments, commentToAdd]);
           setNewComment('');
         }
@@ -120,10 +120,10 @@ function Post() {
 
   const chartSymbol = coinChartSymbols[postObject.coinSymbol] || 'BTCUSDT';
 
-  // Handle chart toggle and reset position when closing
+
   const toggleChart = () => {
     if (showChart) {
-      // Closing chart: reset position
+      
       setChartPosition({ x: 0, y: 0 });
       setShowChart(false);
     } else {

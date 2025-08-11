@@ -91,11 +91,11 @@ function Home() {
     };
     fetchNews();
 
-    // Initial random fact fetch
+  
     fetchRandomFact();
   }, []);
 
-  // When fact panel opens, fetch a new fact
+
   useEffect(() => {
     if (factOpen) {
       fetchRandomFact();

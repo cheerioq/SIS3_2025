@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    postId: {  // explicit foreign key to Posts
+    postId: { 
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    userId: {   // FK to Users, allow null initially
+    userId: {   
       type: DataTypes.INTEGER,
       allowNull: true,
     },

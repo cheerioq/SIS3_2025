@@ -54,7 +54,7 @@ router.get("/basicinfo/:id", async (req, res) => {
   }
 });
 
-// Get coins owned by logged-in user (protected)
+// Get coins owned by loggedin user 
 router.get("/coins", validateToken, async (req, res) => {
   try {
     const user = await Users.findByPk(req.user.id);
@@ -68,7 +68,7 @@ router.get("/coins", validateToken, async (req, res) => {
   }
 });
 
-// Update user's owned coins (protected)
+// Update user's owned coins 
 router.post("/coins", validateToken, async (req, res) => {
   try {
     const { coinsOwned } = req.body;

@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // If you want associations later, define here. For now, none needed.
+  
   Report.associate = (models) => {
-    // e.g. Report.belongsTo(models.Users, { foreignKey: 'userId' });
+    
   };
 
   return Report;

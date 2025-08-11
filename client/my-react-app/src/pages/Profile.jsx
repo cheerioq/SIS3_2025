@@ -26,7 +26,7 @@ function Profile({ loggedInUserId, accessToken }) {
     { id: "binancecoin", symbol: "BNB", name: "Binance Coin", icon: bnbIcon },
   ];
 
-  // Fix type coercion issue and debug:
+
   const isOwner = String(id) === String(loggedInUserId);
   console.log("URL id:", id, "Logged in user id:", loggedInUserId, "isOwner:", isOwner);
 
@@ -79,7 +79,7 @@ function Profile({ loggedInUserId, accessToken }) {
   };
 
   const toggleCoin = (coinId) => {
-    if (!isOwner) return; // block editing others' coins
+    if (!isOwner) return; 
 
     let updatedCoins;
     if (userCoins.includes(coinId)) {

@@ -8,7 +8,7 @@ router.get('/:postId', async (req, res) => {
     const postId = req.params.postId;
 
     const comments = await Comments.findAll({
-      where: { postId: postId },  // lowercase postId matches model field
+      where: { postId: postId },  
       attributes: ['id', 'commentBody', 'postId', 'username', 'userId', 'createdAt', 'updatedAt']
     });
 
@@ -23,7 +23,7 @@ router.post("/", validateToken, async (req, res) => {
   try {
     const comment = req.body;
     comment.username = req.user.username;
-    comment.userId = req.user.id;  // <-- Set userId from token
+    comment.userId = req.user.id;
 
     const createdComment = await Comments.create(comment);
     res.json(createdComment);

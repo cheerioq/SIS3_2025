@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
          coinsOwned: {
       type: DataTypes.TEXT,
       allowNull: false,
-      defaultValue: '[]', // Store as JSON string
+      defaultValue: '[]', 
     },
     
     });

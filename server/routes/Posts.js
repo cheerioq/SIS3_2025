@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Posts, Likes } = require('../models');
-const { validateToken } = require('../middlewares/AuthMiddleware'); // adjust path if needed
+const { validateToken } = require('../middlewares/AuthMiddleware'); 
 
 router.get("/", async (req, res) => {
   const listOfPosts = await Posts.findAll({ include: [{ model: Likes }] });
@@ -19,13 +19,13 @@ router.get('/byId/:id', async (req, res) => {
   }
 });
 
-// Protect this route with validateToken
+
 router.post("/", validateToken, async (req, res) => {
   try {
     console.log("Received post:", req.body);
     const { title, postText, username, coinSymbol } = req.body;
 
-    // Get userId from the validated token (set by middleware)
+    
     const userId = req.user.id; 
     if (!userId) {
       return res.status(401).json({ error: "User not authenticated" });
@@ -36,7 +36,7 @@ router.post("/", validateToken, async (req, res) => {
       postText,
       username,
       coinSymbol,
-      userId,  // <-- use userId from token, not from client
+      userId,  
     });
 
     res.json(createdPost);

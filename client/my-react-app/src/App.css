@@ -22,12 +22,12 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 50px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* fade */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); 
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   overflow: hidden;
-  border: none; /* removed border */
+  border: none; 
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -40,14 +40,14 @@ body {
 /* Title with soft pink background */
 .post .title {
   flex: 20%;
-  background-color: #ffb2e4; /* soft pink */
+  background-color: #ffb2e4; 
   display: grid;
   place-content: center;
   color: white;
   font-weight: bold;
 }
 
-/* Body with transparent background removed since post has fade */
+
 .post .body {
   flex: 60%;
   display: grid;
@@ -61,7 +61,7 @@ body {
   display: flex;
   align-items: center;
   padding-left: 15px;
-  background-color: #ffb2e4; /* soft pink */
+  background-color: #ffb2e4; 
   color: white;
   font-weight: bold;
   border-bottom-left-radius: 10px;
@@ -138,7 +138,7 @@ body {
 
 /* Unified button styles */
 button, .button, .addCommentContainer button, .formContainer button {
-  background-color: #ff94d3; /* base pink */
+  background-color: #ff94d3; 
   border: none;
   border-radius: 8px;
   color: white;
@@ -150,7 +150,7 @@ button, .button, .addCommentContainer button, .formContainer button {
 }
 
 button:hover, .button:hover, .addCommentContainer button:hover, .formContainer button:hover {
-  background-color: #ff4da6; /* darker pink on hover */
+  background-color: #ff4da6; 
 }
 
 /* Centered container */
@@ -183,7 +183,7 @@ button:hover, .button:hover, .addCommentContainer button:hover, .formContainer b
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url('your-background.jpg') center/cover no-repeat; /* optional if using background */
+  background: url('your-background.jpg') center/cover no-repeat; 
 }
 
 .formContainer {
@@ -194,12 +194,12 @@ button:hover, .button:hover, .addCommentContainer button:hover, .formContainer b
   padding: 20px;
   gap: 15px;
 
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* white top to pink bottom */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); 
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 
-  border: none; /* no border */
-  border-radius: 8px; /* keep curved edges */
+  border: none; 
+  border-radius: 8px; 
 
   color: #a74574;
 }
@@ -255,7 +255,7 @@ span {
   font-size: 18px;
   text-decoration: none;
   padding: 8px 12px;
-  background-color: rgba(255, 178, 228, 0.7); /* matching soft pink */
+  background-color: rgba(255, 178, 228, 0.7); 
   border-radius: 8px;
   transition: background-color 0.3s;
 }
@@ -265,7 +265,7 @@ span {
   color: white;
 }
 
-/* Post Page styling */
+
 .postPage {
   display: flex;
   justify-content: center;
@@ -276,7 +276,7 @@ span {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Left side with post content */
+
 .postPage .leftSide {
   width: 500px;
   background: rgba(255, 255, 255, 0.7);
@@ -285,7 +285,7 @@ span {
   padding: 25px;
 }
 
-/* Post title */
+
 .postPage .title {
   font-size: 28px;
   font-weight: bold;
@@ -307,10 +307,10 @@ span {
   color: #777;
 }
 
-/* Right side placeholder (e.g., for comments) */
+/* Right side placeholder  */
 .postPage .rightSide {
   width: 300px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); /* faded like posts */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 148, 211, 0.7)); 
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 15px;
@@ -385,22 +385,22 @@ span {
 }
 
 .formImageTitler {
-  width: 100%;           /* Use % to make it responsive */
-  max-width: 400px;      /* Limit max size */
+  width: 100%;           
+  max-width: 400px;      
   margin: 0 auto 0px auto;
   display: block;
 }
 
 .formImageTitlep {
-  width: 100%;           /* Use % to make it responsive */
-  max-width: 500px;      /* Limit max size */
+  width: 100%;           
+  max-width: 500px;     
   margin: 0 auto 0px auto;
   display: block;
 }
 
 .posts-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 30px;
   padding: 20px;
   margin-top: 0;

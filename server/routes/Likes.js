@@ -32,7 +32,7 @@ router.post("/", validateToken, async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error("LIKE ERROR:", error); // <-- this logs the real issue
+    console.error("LIKE ERROR:", error); 
     res.status(500).json({ error: error.message });
   }
 });

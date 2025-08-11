@@ -23,15 +23,15 @@ function Registration() {
     axios.post("http://localhost:2222/auth", data)
       .then(() => {
         setSuccess(true);
-        // Hide popup and redirect after 2 seconds
+       
         setTimeout(() => {
           setSuccess(false);
-          navigate('/login');  // Change '/login' to your actual login route
+          navigate('/login');  
         }, 2000);
       })
       .catch((err) => {
         console.error(err);
-        // Optionally, handle error state here if you want error popups too
+        
       });
   };
 

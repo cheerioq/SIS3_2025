@@ -24,7 +24,7 @@ function CreatePost() {
 
   const onSubmit = (data) => {
     console.log("Submitting data:", data);
-    const token = localStorage.getItem("accessToken"); // Your JWT token
+    const token = localStorage.getItem("accessToken"); 
     
     axios.post('http://localhost:2222/posts', data, {
       headers: { accessToken: token }
