@@ -11,6 +11,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+
+         coinsOwned: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      defaultValue: '[]', // Store as JSON string
+    },
+    
     });
 
    Users.associate = (models) => {
@@ -23,6 +30,8 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "userId",
                 onDelete: 'CASCADE',
             });
+
+            
     };  
 
     return Users;

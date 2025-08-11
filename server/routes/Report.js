@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Report } = require('../models'); // adjust path if needed
+const { Report } = require('../models'); 
 
 router.post('/', async (req, res) => {
   const { title, username, description } = req.body;

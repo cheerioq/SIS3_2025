@@ -1,31 +1,44 @@
-console.log("Posts router loaded");
-
-
 const express = require('express');
 const router = express.Router();
-const { Posts, Likes } = require('../models'); // Adjust the path as necessary
+const { Posts, Likes } = require('../models');
+const { validateToken } = require('../middlewares/AuthMiddleware'); // adjust path if needed
 
 router.get("/", async (req, res) => {
-  const listOfPosts = await Posts.findAll({include: [{ model: Likes }] });
-  console.log(JSON.stringify(listOfPosts, null, 2));  // Pretty-print the output
+  const listOfPosts = await Posts.findAll({ include: [{ model: Likes }] });
+  console.log(JSON.stringify(listOfPosts, null, 2));
   res.json(listOfPosts);
 });
 
 router.get('/byId/:id', async (req, res) => {
-    const id = req.params.id;
-    const post = await Posts.findByPk(id);
-    if (post) {
-        res.json(post);
-    } else {
-        res.status(404).send('Post not found');
-    }
+  const id = req.params.id;
+  const post = await Posts.findByPk(id);
+  if (post) {
+    res.json(post);
+  } else {
+    res.status(404).send('Post not found');
+  }
 });
 
-router.post("/", async (req, res) => {
+// Protect this route with validateToken
+router.post("/", validateToken, async (req, res) => {
   try {
     console.log("Received post:", req.body);
-    const post = req.body;
-    const createdPost = await Posts.create(post);
+    const { title, postText, username, coinSymbol } = req.body;
+
+    // Get userId from the validated token (set by middleware)
+    const userId = req.user.id; 
+    if (!userId) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const createdPost = await Posts.create({
+      title,
+      postText,
+      username,
+      coinSymbol,
+      userId,  // <-- use userId from token, not from client
+    });
+
     res.json(createdPost);
   } catch (err) {
     console.error("Error creating post:", err);
@@ -38,7 +51,7 @@ router.get("/byuserId/:userId", async (req, res) => {
   try {
     const posts = await Posts.findAll({
       where: { userId: userId },
-      include: [{ model: Likes }]  // if you want to include likes as well
+      include: [{ model: Likes }]
     });
     res.json(posts);
   } catch (err) {
@@ -46,6 +59,5 @@ router.get("/byuserId/:userId", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch posts for user" });
   }
 });
-
 
 module.exports = router;

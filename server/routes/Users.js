@@ -37,12 +37,12 @@ router.get('/auth', validateToken, (req, res) => {
   res.json(req.user);
 });
 
-// New route: Get basic info of user by id
+// Get basic info of user by id
 router.get("/basicinfo/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const user = await Users.findByPk(id, {
-      attributes: ["username", "createdAt", "updatedAt"], // only selected fields
+      attributes: ["username", "createdAt", "updatedAt"],
     });
 
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -51,6 +51,54 @@ router.get("/basicinfo/:id", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get coins owned by logged-in user (protected)
+router.get("/coins", validateToken, async (req, res) => {
+  try {
+    const user = await Users.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const coinsOwned = user.coinsOwned ? JSON.parse(user.coinsOwned) : [];
+    res.json({ coinsOwned });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Update user's owned coins (protected)
+router.post("/coins", validateToken, async (req, res) => {
+  try {
+    const { coinsOwned } = req.body;
+    if (!Array.isArray(coinsOwned))
+      return res.status(400).json({ error: "coinsOwned must be an array" });
+
+    const user = await Users.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.coinsOwned = JSON.stringify(coinsOwned);
+    await user.save();
+
+    res.json({ message: "Coins updated" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get coins owned by any user by id (public)
+router.get("/coins/:id", async (req, res) => {
+  try {
+    const user = await Users.findByPk(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const coinsOwned = user.coinsOwned ? JSON.parse(user.coinsOwned) : [];
+    res.json({ coinsOwned });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

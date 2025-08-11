@@ -403,6 +403,7 @@ span {
   grid-template-columns: repeat(3, 1fr); /* 3 columns */
   gap: 30px;
   padding: 20px;
+  margin-top: 0;
 }
 
 .username-topright {

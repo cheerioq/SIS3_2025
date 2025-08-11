@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../helpers/AuthContext';
 
@@ -53,6 +53,7 @@ function DraggableWindow({ children, position, setPosition }) {
 
 function Post() {
   let { id } = useParams();
+  const navigate = useNavigate();
   const [postObject, setPostObject] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -90,7 +91,7 @@ function Post() {
         if (response.data.error) {
           console.log(response.data.error);
         } else {
-          const commentToAdd = response.data; // includes commentBody and username
+          const commentToAdd = response.data; // includes commentBody, username, userId
           setComments([...comments, commentToAdd]);
           setNewComment('');
         }
@@ -173,7 +174,19 @@ function Post() {
         <div className="listOfComments">
           {comments.map((comment, key) => (
             <div key={key} className="comment">
-              <strong>{comment.username}</strong>: {comment.commentBody}
+              <span
+                style={{
+                  fontWeight: 'bold',
+                  color: '#e91e63',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                }}
+                onClick={() => navigate(`/profile/${comment.userId}`)}
+                title={`Go to ${comment.username}'s profile`}
+              >
+                {comment.username}
+              </span>
+              : {comment.commentBody}
               {authState.username === comment.username && (
                 <button
                   onClick={() => deleteComment(comment.id)}
@@ -210,13 +223,11 @@ function Post() {
               }}
             >
               <span>{postObject.coinSymbol} Chart</span>
-              
             </div>
             <iframe
               title="TradingView Chart"
               src={`https://s.tradingview.com/widgetembed/?symbol=${chartSymbol}&interval=D&theme=light&style=1&locale=en&toolbarbg=fff0f6&enable_publishing=false&hide_top_toolbar=true&hide_legend=true&save_image=false`}
               style={{ width: '100%', height: '180px', border: 'none', borderRadius: '6px' }}
-              
               scrolling="no"
             />
           </DraggableWindow>

@@ -3,7 +3,12 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import defaultpfp from "../defaultpfp.jpg";
 
-function Profile() {
+import btcIcon from "../btc.png";
+import ethIcon from "../eth.png";
+import solIcon from "../sol.png";
+import bnbIcon from "../bnb.png";
+
+function Profile({ loggedInUserId, accessToken }) {
   const { id } = useParams();
 
   const [userInfo, setUserInfo] = useState({
@@ -11,8 +16,19 @@ function Profile() {
     createdAt: "",
     updatedAt: "",
   });
-
   const [posts, setPosts] = useState([]);
+  const [userCoins, setUserCoins] = useState([]);
+
+  const availableCoins = [
+    { id: "bitcoin", symbol: "BTC", name: "Bitcoin", icon: btcIcon },
+    { id: "ethereum", symbol: "ETH", name: "Ethereum", icon: ethIcon },
+    { id: "solana", symbol: "SOL", name: "Solana", icon: solIcon },
+    { id: "binancecoin", symbol: "BNB", name: "Binance Coin", icon: bnbIcon },
+  ];
+
+  // Fix type coercion issue and debug:
+  const isOwner = String(id) === String(loggedInUserId);
+  console.log("URL id:", id, "Logged in user id:", loggedInUserId, "isOwner:", isOwner);
 
   useEffect(() => {
     axios
@@ -27,7 +43,31 @@ function Profile() {
       .get(`http://localhost:2222/posts/byuserId/${id}`)
       .then((res) => setPosts(res.data))
       .catch((err) => console.error("Error fetching user's posts:", err));
-  }, [id]);
+
+    if (isOwner) {
+      axios
+        .get(`http://localhost:2222/auth/coins`, {
+          headers: { accessToken },
+        })
+        .then((res) => {
+          setUserCoins(res.data.coinsOwned || []);
+        })
+        .catch((err) => {
+          console.error("Error fetching own coins:", err);
+          setUserCoins([]);
+        });
+    } else {
+      axios
+        .get(`http://localhost:2222/auth/coins/${id}`)
+        .then((res) => {
+          setUserCoins(res.data.coinsOwned || []);
+        })
+        .catch((err) => {
+          console.error("Error fetching other's coins:", err);
+          setUserCoins([]);
+        });
+    }
+  }, [id, accessToken, isOwner]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -36,6 +76,27 @@ function Profile() {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const toggleCoin = (coinId) => {
+    if (!isOwner) return; // block editing others' coins
+
+    let updatedCoins;
+    if (userCoins.includes(coinId)) {
+      updatedCoins = userCoins.filter((c) => c !== coinId);
+    } else {
+      updatedCoins = [...userCoins, coinId];
+    }
+
+    setUserCoins(updatedCoins);
+
+    axios
+      .post(
+        `http://localhost:2222/auth/coins`,
+        { coinsOwned: updatedCoins },
+        { headers: { accessToken } }
+      )
+      .catch((err) => console.error("Error saving coins:", err));
   };
 
   return (
@@ -114,6 +175,56 @@ function Profile() {
             </p>
           </div>
         </div>
+
+        {/* Coin selector with icons */}
+        <div
+          style={{
+            marginTop: 40,
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            gap: 15,
+            maxWidth: "100%",
+          }}
+        >
+          {availableCoins.map((coin) => {
+            const isSelected = userCoins.includes(coin.id);
+            return (
+              <div
+                key={coin.id}
+                onClick={isOwner ? () => toggleCoin(coin.id) : undefined}
+                title={coin.name}
+                style={{
+                  filter: isSelected
+                    ? "none"
+                    : "grayscale(100%) brightness(150%) opacity(0.3)",
+                  transition: "filter 0.3s ease",
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  padding: 8,
+                  background: isSelected ? "rgba(255, 77, 166, 0.2)" : "transparent",
+                  boxShadow: isSelected ? "0 0 12px #ff4da6" : "none",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: isOwner ? "pointer" : "default",
+                  pointerEvents: isOwner ? "auto" : "none",
+                }}
+              >
+                <img
+                  src={coin.icon}
+                  alt={coin.symbol}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    filter: isSelected ? "drop-shadow(0 0 4px #ff4da6)" : "none",
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
       </aside>
 
       {/* Posts Grid */}
@@ -161,12 +272,19 @@ function Profile() {
                   fontWeight: "bold",
                   fontSize: 20,
                   color: "#ff4da6",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
                 }}
               >
+                <img
+                  src={defaultpfp}
+                  alt="Post icon"
+                  style={{ width: 30, height: 30, borderRadius: "50%" }}
+                />
                 {title}
               </h3>
 
-              {/* Show coin symbol if available */}
               {coinSymbol && (
                 <p
                   style={{
