@@ -23,7 +23,7 @@ function Report() {
       return;
     }
 
-    axios.post('http://localhost:2222/report', { title, username, description })
+    axios.post('/report', { title, username, description })
       .then(() => {
         alert('🌸 Report successfully sent! 🌸');
         navigate('/');

@@ -32,7 +32,7 @@ function Profile({ loggedInUserId, accessToken }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:2222/auth/basicinfo/${id}`)
+      .get(`/auth/basicinfo/${id}`)
       .then((res) => {
         const { username, createdAt, updatedAt } = res.data;
         setUserInfo({ username, createdAt, updatedAt });
@@ -40,13 +40,13 @@ function Profile({ loggedInUserId, accessToken }) {
       .catch((err) => console.error("Error fetching user info:", err));
 
     axios
-      .get(`http://localhost:2222/posts/byuserId/${id}`)
+      .get(`/posts/byuserId/${id}`)
       .then((res) => setPosts(res.data))
       .catch((err) => console.error("Error fetching user's posts:", err));
 
     if (isOwner) {
       axios
-        .get(`http://localhost:2222/auth/coins`, {
+        .get(`/auth/coins`, {
           headers: { accessToken },
         })
         .then((res) => {
@@ -58,7 +58,7 @@ function Profile({ loggedInUserId, accessToken }) {
         });
     } else {
       axios
-        .get(`http://localhost:2222/auth/coins/${id}`)
+        .get(`/auth/coins/${id}`)
         .then((res) => {
           setUserCoins(res.data.coinsOwned || []);
         })
@@ -92,7 +92,7 @@ function Profile({ loggedInUserId, accessToken }) {
 
     axios
       .post(
-        `http://localhost:2222/auth/coins`,
+        `/auth/coins`,
         { coinsOwned: updatedCoins },
         { headers: { accessToken } }
       )

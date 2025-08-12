@@ -20,7 +20,7 @@ function Registration() {
   });
 
   const onSubmit = (data) => {
-    axios.post("http://localhost:2222/auth", data)
+    axios.post("/auth", data)
       .then(() => {
         setSuccess(true);
        

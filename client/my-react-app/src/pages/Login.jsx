@@ -13,7 +13,7 @@ function Login() {
 
   const login = () => {
     const data = { username, password };
-    axios.post("http://localhost:2222/auth/login", data)
+    axios.post("/auth/login", data)
       .then((response) => {
         if (response.data.error)  {
 

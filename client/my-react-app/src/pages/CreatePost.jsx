@@ -26,7 +26,7 @@ function CreatePost() {
     console.log("Submitting data:", data);
     const token = localStorage.getItem("accessToken"); 
     
-    axios.post('http://localhost:2222/posts', data, {
+    axios.post('/posts', data, {
       headers: { accessToken: token }
     }).then(() => {
       navigate('/');

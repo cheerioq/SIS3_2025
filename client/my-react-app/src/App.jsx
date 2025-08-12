@@ -1,33 +1,44 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from './pages/Home';
-import CreatePost from './pages/CreatePost';
-import Post from './pages/Post';
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-import petalsGif from './gif.gif';
-import { AuthContext } from './helpers/AuthContext';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import PageNotFound from './pages/PageNotFound';
-import Profile from './pages/Profile';
-import Report from './pages/Report';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import CreatePost from "./pages/CreatePost";
+import Post from "./pages/Post";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
+import petalsGif from "./gif.gif";
+import { AuthContext } from "./helpers/AuthContext";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import PageNotFound from "./pages/PageNotFound";
+import Profile from "./pages/Profile";
+import Report from "./pages/Report";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false });
 
   useEffect(() => {
-    axios.get("http://localhost:2222/auth/auth", {
-      headers: {
-        accessToken: localStorage.getItem("accessToken"),
-      }
-    }).then((response) => {
-      if (response.data.error) {
-        setAuthState({ ...authState, status: false });
-      } else {
-        setAuthState({ username: response.data.username, id: response.data.id, status: true });
-      }
-    });
+    const token = localStorage.getItem("accessToken");
+
+    // If there's no token yet, mark as logged out and skip the request
+    if (!token) {
+      setAuthState((s) => ({ ...s, status: false }));
+      return;
+    }
+
+    axios
+      .get("/auth/auth", {
+        headers: { accessToken: token },
+        // don't throw for 401/403 so we can set status cleanly
+        validateStatus: (s) => s >= 200 && s < 500,
+      })
+      .then((res) => {
+        if (res.status === 200 && res.data?.id) {
+          setAuthState({ username: res.data.username, id: res.data.id, status: true });
+        } else {
+          setAuthState((s) => ({ ...s, status: false }));
+        }
+      })
+      .catch(() => setAuthState((s) => ({ ...s, status: false })));
   }, []);
 
   const logout = () => {
@@ -79,7 +90,7 @@ function App() {
                 element={
                   <Profile
                     loggedInUserId={authState.id}
-                    accessToken={localStorage.getItem("accessToken")}
+                    accessToken={localStorage.getItem("accessToken") || ""}
                   />
                 }
               />

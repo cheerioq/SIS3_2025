@@ -5,6 +5,8 @@ import likedImg from '../liked.png';
 import unlikedImg from '../unliked.png';
 import cryptocrybLogo from '../cryptocryb.png';
 
+const API_BASE = ""; // your backend
+
 function Home() {
   const [listOfPosts, setListOfPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState({});
@@ -20,18 +22,107 @@ function Home() {
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsOpen, setNewsOpen] = useState(false);
 
-  // For facts widget
+  // Facts widget
   const [factOpen, setFactOpen] = useState(false);
   const [randomFact, setRandomFact] = useState('');
 
   const navigate = useNavigate();
 
+  // --- RSS helpers (client-only, with fallbacks) ---
+  const RSS_FEEDS = [
+    { url: "https://www.coindesk.com/arc/outboundfeeds/rss/?outputType=xml", source: "CoinDesk" },
+    { url: "https://cointelegraph.com/rss", source: "Cointelegraph" },
+  ];
+
+  async function fetchViaAllOriginsRaw(url) {
+    const encoded = encodeURIComponent(url);
+    const { data } = await axios.get(
+      `https://api.allorigins.win/raw?url=${encoded}&t=${Date.now()}`,
+      { timeout: 20000 } // 20s
+    );
+    return data; // XML string
+  }
+
+  async function fetchViaAllOriginsJson(url) {
+    const encoded = encodeURIComponent(url);
+    const { data } = await axios.get(
+      `https://api.allorigins.win/get?url=${encoded}&t=${Date.now()}`,
+      { timeout: 20000 }
+    );
+    return data.contents; // XML string
+  }
+
+  async function fetchViaRss2Json(url) {
+    // Free tier fallback; may be rate-limited
+    const { data } = await axios.get(
+      "https://api.rss2json.com/v1/api.json",
+      { params: { rss_url: url }, timeout: 20000 }
+    );
+    return data; // JSON, not XML
+  }
+
+  function parseXmlItems(xmlString, source) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlString, "text/xml");
+    const items = Array.from(xml.querySelectorAll("item")).slice(0, 10);
+    return items.map((it) => ({
+      title: it.querySelector("title")?.textContent ?? "Untitled",
+      url: it.querySelector("link")?.textContent ?? "#",
+      source,
+      publishedAt:
+        it.querySelector("pubDate")?.textContent ??
+        it.querySelector("updated")?.textContent ??
+        null,
+    }));
+  }
+
+  async function fetchFeed({ url, source }) {
+    try {
+      const xml = await fetchViaAllOriginsRaw(url);
+      return parseXmlItems(xml, source);
+    } catch (_) {
+      try {
+        const xml = await fetchViaAllOriginsJson(url);
+        return parseXmlItems(xml, source);
+      } catch (_) {
+        try {
+          const json = await fetchViaRss2Json(url);
+          return (json.items || []).slice(0, 10).map((i) => ({
+            title: i.title,
+            url: i.link,
+            source,
+            publishedAt: i.pubDate ?? null,
+          }));
+        } catch (err3) {
+          console.error(`All fallbacks failed for ${source}:`, err3);
+          return [];
+        }
+      }
+    }
+  }
+
+  const fetchNews = async () => {
+    setNewsLoading(true);
+    try {
+      const lists = await Promise.all(RSS_FEEDS.map(fetchFeed));
+      const merged = lists
+        .flat()
+        .sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
+        .slice(0, 10);
+      setNews(merged);
+    } catch (err) {
+      console.error("Error fetching crypto news (RSS):", err);
+      setNews([]);
+    } finally {
+      setNewsLoading(false);
+    }
+  };
+
   // Fetch random fact from backend
   const fetchRandomFact = async () => {
     try {
-      const response = await axios.get('http://localhost:2222/facts/random');
-      setRandomFact(response.data.factText);
-      console.log("Fetched random fact:", response.data.factText);
+      const { data } = await axios.get(`${API_BASE}/facts/random`);
+      setRandomFact(data.factText);
     } catch (error) {
       console.error("Error fetching random fact:", error);
       setRandomFact("Could not load a fact at this time.");
@@ -42,98 +133,73 @@ function Home() {
     const storedUserId = localStorage.getItem("userId");
     const userId = storedUserId ? parseInt(storedUserId) : null;
 
-    axios.get('http://localhost:2222/posts').then((response) => {
+    // Posts
+    axios.get(`${API_BASE}/posts`).then((response) => {
       setListOfPosts(response.data);
 
       if (!userId) {
         setLikedPosts({});
         return;
       }
-
-      const likedPostsFromBackend = {};
+      const likedMap = {};
       response.data.forEach(post => {
-        likedPostsFromBackend[post.id] = post.Likes.some(
-          like => like.userId === userId
-        );
+        likedMap[post.id] = post.Likes?.some(like => like.userId === userId);
       });
-
-      setLikedPosts(likedPostsFromBackend);
+      setLikedPosts(likedMap);
     });
 
+    // Crypto rates (public API)
     axios.get('https://api.coingecko.com/api/v3/simple/price', {
-      params: {
-        ids: 'bitcoin,ethereum,solana,binancecoin',
-        vs_currencies: 'eur',
-      }
-    }).then(response => {
+      params: { ids: 'bitcoin,ethereum,solana,binancecoin', vs_currencies: 'eur' }
+    })
+    .then(res => {
       setCryptoRates({
-        bitcoin: response.data.bitcoin.eur,
-        ethereum: response.data.ethereum.eur,
-        solana: response.data.solana.eur,
-        binancecoin: response.data.binancecoin.eur,
+        bitcoin: res.data.bitcoin.eur,
+        ethereum: res.data.ethereum.eur,
+        solana: res.data.solana.eur,
+        binancecoin: res.data.binancecoin.eur,
       });
-    }).catch(err => {
-      console.error("Error fetching crypto rates:", err);
-    });
+    })
+    .catch(err => console.error("Error fetching crypto rates:", err));
 
-    const fetchNews = async () => {
-      try {
-        const apiKey = '23d0b9233ddc4eb091dc3724e281f3bc';
-        const response = await axios.get(
-          `https://newsapi.org/v2/everything?q=cryptocurrency OR bitcoin OR ethereum&language=en&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
-        );
-        setNews(response.data.articles);
-      } catch (error) {
-        console.error('Error fetching crypto news:', error);
-      } finally {
-        setNewsLoading(false);
-      }
-    };
+    // News + Fact
     fetchNews();
-
-  
     fetchRandomFact();
   }, []);
 
-
   useEffect(() => {
-    if (factOpen) {
-      fetchRandomFact();
-    }
+    if (factOpen) fetchRandomFact();
   }, [factOpen]);
 
   const likeAPost = (postId) => {
     const isLiked = likedPosts[postId];
 
     axios.post(
-      "http://localhost:2222/likes",
-      { postId: postId, like: !isLiked },
+      `${API_BASE}/likes`,
+      { postId, like: !isLiked },
       { headers: { accessToken: localStorage.getItem("accessToken") } }
     ).then(() => {
-      setLikedPosts((prev) => ({
-        ...prev,
-        [postId]: !isLiked,
-      }));
-
-      setListOfPosts((prevList) =>
-        prevList.map((post) => {
-          if (post.id === postId) {
-            return {
-              ...post,
-              Likes: !isLiked
-                ? [...post.Likes, { userId: parseInt(localStorage.getItem("userId")) }]
-                : post.Likes.filter(like => like.userId !== parseInt(localStorage.getItem("userId"))),
-            };
-          }
-          return post;
+      setLikedPosts(prev => ({ ...prev, [postId]: !isLiked }));
+      setListOfPosts(prevList =>
+        prevList.map(post => {
+          if (post.id !== postId) return post;
+          const currentUserId = parseInt(localStorage.getItem("userId"));
+          return {
+            ...post,
+            Likes: !isLiked
+              ? [...(post.Likes || []), { userId: currentUserId }]
+              : (post.Likes || []).filter(like => like.userId !== currentUserId),
+          };
         })
       );
+    }).catch(err => {
+      console.error("Like failed:", err);
     });
   };
 
   const isLoggedIn = !!localStorage.getItem("userId");
 
-  const filteredPosts = listOfPosts.filter(post => 
+  const filteredPosts = listOfPosts.filter(post =>
     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     post.postText.toLowerCase().includes(searchTerm.toLowerCase()) ||
     post.username.toLowerCase().includes(searchTerm.toLowerCase())
@@ -145,9 +211,7 @@ function Home() {
     return (eur / rate).toFixed(6);
   };
 
-  const getNewFact = () => {
-    fetchRandomFact();
-  };
+  const getNewFact = () => fetchRandomFact();
 
   return (
     <>
@@ -293,7 +357,9 @@ function Home() {
                   onClick={() => window.open(article.url, '_blank')}
                 >
                   <h4 style={{ margin: '0 0 5px 0', color: '#a74574' }}>{article.title}</h4>
-                  <p style={{ margin: 0, fontSize: '12px', color: '#333' }}>{article.source.name}</p>
+                  <p style={{ margin: 0, fontSize: '12px', color: '#333' }}>
+                    {article.source?.name || article.source || ""}
+                  </p>
                 </div>
               ))
             )}

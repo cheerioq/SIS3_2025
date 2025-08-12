@@ -64,11 +64,11 @@ function Post() {
   const [chartPosition, setChartPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    axios.get(`http://localhost:2222/posts/byId/${id}`).then((response) => {
+    axios.get(`/posts/byId/${id}`).then((response) => {
       setPostObject(response.data);
     });
 
-    axios.get(`http://localhost:2222/comments/${id}`).then((response) => {
+    axios.get(`/comments/${id}`).then((response) => {
       setComments(response.data);
     });
   }, [id]);
@@ -76,7 +76,7 @@ function Post() {
   const addComment = () => {
     axios
       .post(
-        'http://localhost:2222/comments',
+        '/comments',
         {
           commentBody: newComment,
           postId: id,
@@ -100,7 +100,7 @@ function Post() {
 
   const deleteComment = (id) => {
     axios
-      .delete(`http://localhost:2222/comments/${id}`, {
+      .delete(`/comments/${id}`, {
         headers: { accessToken: localStorage.getItem('accessToken') },
       })
       .then(() => {
