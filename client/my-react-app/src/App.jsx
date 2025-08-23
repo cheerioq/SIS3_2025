@@ -5,13 +5,14 @@ import CreatePost from "./pages/CreatePost";
 import Post from "./pages/Post";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
+import Profile from "./pages/Profile";
+import Report from "./pages/Report";
+import RankList from "./pages/RankList"; 
+import PageNotFound from "./pages/PageNotFound";
 import petalsGif from "./gif.gif";
 import { AuthContext } from "./helpers/AuthContext";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import PageNotFound from "./pages/PageNotFound";
-import Profile from "./pages/Profile";
-import Report from "./pages/Report";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false });
@@ -19,7 +20,6 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
-    // If there's no token yet, mark as logged out and skip the request
     if (!token) {
       setAuthState((s) => ({ ...s, status: false }));
       return;
@@ -28,7 +28,6 @@ function App() {
     axios
       .get("/auth/auth", {
         headers: { accessToken: token },
-        // don't throw for 401/403 so we can set status cleanly
         validateStatus: (s) => s >= 200 && s < 500,
       })
       .then((res) => {
@@ -60,6 +59,7 @@ function App() {
               <Link to="/">Home Page</Link>
               <Link to="/createpost">Create a Post</Link>
               <Link to="/report">Report</Link>
+              <Link to="/ranklist">Rank List</Link> {/* New button */}
 
               {!authState.status ? (
                 <>
@@ -95,6 +95,7 @@ function App() {
                 }
               />
               <Route path="/report" element={<Report />} />
+              <Route path="/ranklist" element={<RankList />} /> {/* New route */}
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Router>
